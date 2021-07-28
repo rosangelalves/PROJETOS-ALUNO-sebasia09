@@ -1,0 +1,559 @@
+
+<html>
+<head>
+<style>
+html {
+    min-height: 100%;
+}
+ body {
+    zoom: 400%;
+}
+body {
+   
+    background-color: #000000; 
+} </style>
+</head>
+<body>
+</body>
+</html><meta charset="utf-8">
+<select name ="lugar" id = "lugar" size ="4" onchange ="salvaLugarArray()">
+	<option value = "Selecione"> Selecione sua posição</option>
+
+</select> <br> <br>
+
+
+<script>
+
+//----------------------------------FUNÇÕES-BASICAS----------------------------------
+
+//----------------------------------EVENTOS----------------------------------
+
+function pegaAleatorio(min, max)
+{
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+var morreDormindo = Math.random() * 100;
+
+
+//----------------------------------MOSTRA---------------------------------
+
+function mostra(texto) {
+	document.write(texto)
+}
+
+//--------------------------------ALERTA-TEXTO---------------------------
+
+function alertaTempo(msg,duracao)
+{
+ var el = document.createElement("div");
+ el.setAttribute("style","position:absolute;top:70%;left:3%;background-color:white;padding:10pxsolid#000;word-break:break-word;height:70px");
+ el.innerHTML = msg;
+ el.id = "AA"
+
+ setTimeout(function(){
+  el.parentNode.removeChild(el);
+ },duracao);
+ document.body.appendChild(el);
+}
+
+//----------------------------------PEDE-NOME----------------------------------
+var certeza = null                                                                    // Confere o nome e descarta vazios ou errados
+	var certezaOk = false;
+	if(localStorage.getItem("nome") == undefined){
+		var nome = null 
+	} else {
+		nome = localStorage.getItem("nome")
+		certezaOk = true;
+	}
+	                                                                               
+		while(nome === null || nome === "") {                                           // Pede o nome e discarta vazios
+			nome = prompt("Digite seu nome: ")
+		}
+	
+		while(certezaOk == false) {
+			certeza = prompt( nome + " será o seu nome, tem certeza?")
+				if(certeza == "sim" || certeza == "s" || certeza == "ss" || certeza == "si") {
+					certezaOk = true;
+					salvaNome()
+					break;
+				}
+				if(certeza == "nao" || certeza == "não" || certeza == "n") {              // Pede de novo caso certeza seja nao
+					nome = prompt("Digite seu nome: ")
+				}
+		salvaNome()
+		}
+
+//----------------------------------SALVA-NOME----------------------------------
+
+function salvaNome() {
+	localStorage.setItem("nome", nome)
+}
+
+//----------------------------------CRIA-OPCAO----------------------------------
+
+	function criaOpcao(seleciona, texto, valor) {
+
+		var sel = document.getElementById(seleciona); 					// Escolhe o select
+			var opt = document.createElement('option'); 				// Cria novo elemento
+				opt.appendChild( document.createTextNode(texto) ); 		// Cria textinho
+					opt.value = valor; 									// Valor
+						sel.appendChild(opt); 							// Bota a opção nova no final
+	}
+
+	criaOpcao("lugar", "------------------------------", "-");
+	criaOpcao("lugar", "Quarto", "Quarto");
+
+//----------------------------------SALVA-LUGAR----------------------------------
+	var mudaLugar = 0;
+		var salvaLugarArray = function() {
+			var lugar = document.getElementById("lugar").value         // Pega o lugar selecionado
+				if(lugar !== "Selecione" && lugar !== "-") {            // Ignora dois primeiros
+					posiçãoAtual.unshift(lugar)          										              
+						if(posiçãoAtual[0]) {                           // Ignora vazio
+							mudaLugar ++  
+							mudaDisplay();
+							while(mudaLugar > 1) {
+								mudaLugar = 0;								
+							} 
+								if(gelado > 1) {
+									alert(nome + " entrou em " + lugar)    // Mostra alerta depois da primeira vez
+								}
+
+						}   
+				}			
+		}
+
+	                                   // Chama se ouver alteração
+
+//----------------------------------MUDA-DISPLAY---------------------------------- 
+function mudaDisplay() {
+	limpaTela();
+
+//---QUARTO----
+
+	if(mudaLugar == 1 && posiçãoAtual[0] == "Quarto") {
+		mudaLugar = 0;
+		limpaTela();
+		mudaCor(0, cor[0])
+			if(levantou === false) {
+				criaBotao("Levantar", levantar);
+			};	
+			if(gelado === null){
+				alert(nome + " acordou confuso de um sonho muito real..")
+			}; if(gelado > 0) {
+			if(pantufas === false) {
+				criaBotao("Vestir Pantufas", vestirPantufas)
+			};	
+			if(luzQuarto === false) {
+				criaBotao("Ligar o abajur", acendeLuz)
+			};
+			if(luzQuarto === true) {
+				criaBotao("Desligar o abajur", apagaLuz)
+			};
+			if(sedentario >= 1) {
+				criaBotao("Malhar", malha)
+			}
+			}
+	}
+
+//----SALA----
+
+	if(mudaLugar == 1 && posiçãoAtual[0] == "Sala") {
+		mudaLugar = 0;
+		limpaTela()
+		mudaCor(1, cor[1])
+		if(sentado === true){
+			sentado = false
+		}
+		if(sentado === false) {
+			criaBotao("Sentar no sofá", sentaSofa);
+		}	
+		if(luzSala === false){
+			criaBotao("Abrir Janela", abreJanela);
+		};
+		if(luzSala === true){
+			criaBotao("Fechar Janela", fechaJanela);
+		}
+	}
+}
+
+//----------------------------------LIMPA-TELA---------------------------------- 
+
+// Toda vez  que criar um botão novo adiciona ele aqui pra tirar ele
+
+	function limpaTela() {
+		tiraBotao("Abrir a porta");
+		tiraBotao("Ligar o abajur");
+		tiraBotao("Desligar o abajur");
+		tiraBotao("Levantar");
+		tiraBotao("Vestir Pantufas");
+		tiraBotao("Sentar no sofá");
+		tiraBotao("Levantar do sofá")
+		tiraBotao("Abrir Janela");
+		tiraBotao("Fechar Janela")
+		tiraBotao("Assistir TV")
+	}
+//----------------------------------CRIA-BOTAO----------------------------------
+
+
+function criaBotao(nome, funcao){
+    var btn = document.createElement('button');                          // cria botão
+    var t = document.createTextNode(nome); 
+    btn.id = nome                             // da nome
+    btn.appendChild(t);                                           
+    btn.onclick = funcao                                                // Da função pra ele quando clica
+    document.body.appendChild(btn);                                                                              
+}
+
+//----------------------------------TIRA-BOTAO----------------------------------
+
+function tiraBotao(nome) {
+	if(document.getElementById(nome)) {
+		var btn = document.getElementById(nome);
+	btn.remove();
+	} 
+	
+}
+
+//----------------------------------CORES----------------------------------
+
+	function mudaCor(n, novaCor) {
+		cor[n] = novaCor;
+		document.body.style.backgroundColor = novaCor;
+	}
+//----------------------------------ARRAYS----------------------------------
+var posiçãoAtual = ["Quarto"];
+var cor = ["black", "black"] 
+// As cores se dão da seguinte forma:
+// 0 = Quarto
+// 1 = Sala
+// ...
+var programaTv = ["a Xuxa", "ao programa do Ratinho.", "Domingão do faustão.", "vídeos de carros rebaixados.", "TikTok de indiano", "a triologia da Barbie.", "uma imagem estática medonha..", "Por Agua Abaixo 3.", "ao jogo do mengão.", "ao Globo Reporter", "ao Domingo Espetacular", "funny monkey versão extendida.", "Carros 2", "ao seu próprio reflexo na tela preta.", "Pesadelo na Cozinha.", "ao casamento da gorda da tua mãe.", "todos os filmes do Adam Sandler.", ""]
+
+
+while(localStorage.Forca === "NaN") {
+	localStorage.setItem("Forca", 0)
+}
+var força = parseInt(localStorage.getItem("Forca"))
+var inteligência = 0;
+
+//----------------------------------QUARTO----------------------------------
+
+var levantou = false;
+var levantar = function() {
+	tiraBotao("Levantar")
+	levantou = true;
+	if(pantufas == false) {
+		alert(nome + " levanta da cama, quandos seus pés tocam o chão gelado, todo seu corpo se arrepia.")
+	final1()
+	} else {
+		if(portaAberta < 1) {
+			alertaTempo(nome + " levanta da cama, suas pantufas quentinhas o protegem.", 15000)
+			limpaTela()
+			criaBotao("Abrir a porta", abrePorta);
+			if(luzQuarto === false) {
+				criaBotao("Ligar o abajur", acendeLuz)
+			};
+			if(luzQuarto === true) {
+				criaBotao("Desligar o abajur", apagaLuz)	
+			};
+		}
+	}
+	}
+	
+	
+
+var pantufas = false;
+var vestirPantufas = function() {
+	tiraBotao("Vestir Pantufas") 
+	alertaTempo("Você veste suas pantufas da Hello Kitty, seus pés estão quentinhos e você pode se levantar.", 10000)
+	 pantufas = true;
+
+}
+
+var luzQuarto = false;
+var acendeLuz = function() {
+	luzQuarto = true;
+	var choque = Math.round(Math.random() * 100)
+	if(choque < 11) {
+		final2()
+	} else {
+		tiraBotao("Ligar o abajur") 
+	alertaTempo(nome + " ligou o abajur..", 10000)
+	mudaCor(0, "gray")
+	document.body.style.zoom = "400%"
+	criaBotao("Desligar o abajur", apagaLuz)
+	}
+	
+}
+
+var apagaLuz = function() {
+	luzQuarto = false;
+	var choque = Math.round(Math.random() * 100)
+	if(choque < 11) {
+		final2()
+	} else {
+		tiraBotao("Desligar o abajur")
+	alert(nome + " desligou o abajur..")
+	mudaCor(0, "black")
+	document.body.style.zoom = "400%"
+	criaBotao("Ligar o abajur", acendeLuz)
+	}
+	
+}
+
+var malha = function() {
+	var chance = Math.round(Math.random() * 100)
+	var quant = Math.round(Math.random() * 10)
+	if(chance < 10) {
+		força = força + quant
+		alert(nome + " fez alguns agachamentos.. + " + quant + " de força. (" + força + ")")
+		alertaTempo(nome + " fez alguns agachamentos.. + " + quant + " de força. (" + força + ")", 10000)
+	} else{
+		if(chance < 20) {
+			força = força + quant
+			alert(nome +" fez alguns polichinelos.. + " +quant + " de força. (" + força + ")")
+			alertaTempo(nome +" fez alguns polichinelos.. + " +quant + " de força. (" + força + ")", 10000)
+		} else{
+			if(chance < 30) {
+				força = força + quant
+				alert(nome +" fez algumas flexões. + " +quant + " de força. (" + força + ")")
+			} else{
+				if(chance < 40) {
+					força = força + quant
+					alert(nome +" quase se peidou fazendo flexões. + "+ quant + " de força. (" + força + ")")
+				} else{
+					if(chance < 50) {
+						alert(nome +" exercitou a mente. + " +quant + " de inteligencia. (" + força + ")")
+					} else{
+						if(chance < 60) {
+							alert(nome +" tá com preguiça e não fez nada.")
+						} else{
+							if(chance < 70) {
+								força = força - quant
+								alert(nome +" se exercitou muito e machucou o músculo.. -" +quant+ " de força. (" + força + ")")
+							} else{
+								if(chance < 80) {
+									força = força - quant
+									alert("AIAIAI CAIMBRAAA -" + quant + " de força. (" + força + ")")
+								} else{
+									if(chance<90) {
+										força = força + quant
+										alert(nome + " malhou os dedos no celular +" + quant+ " de força. (" + força+ ")")
+									} else {
+										if(chance <=100) {
+											final5()
+										}
+									}	
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	localStorage.setItem("Forca", força)
+}
+
+
+
+
+
+//----------------------------------SALA----------------------------------
+
+var portaAberta = 0;
+var abrePorta = function() {	
+		portaAberta++	
+			if(portaAberta == 1) {
+				alert(nome +" caminha lentamente até a pequena porta de madeira, que range ao ser aberta..")
+					criaOpcao("lugar", "Sala", "Sala")
+					tiraBotao("Abrir a porta")
+				} 
+}
+var sentado = false;
+	var sentaSofa = function() {
+		sentado = true;
+		alert(nome +" sentou-se no sofá..")
+			tiraBotao("Sentar no sofá");
+			criaBotao("Levantar do sofá", levantaSofa);
+			criaBotao("Assistir TV", assisteTv);
+	}	
+	
+	var levantaSofa = function() {
+		sentado = false;
+		alert(nome +" levantou do sofá..");
+			criaBotao("Sentar no sofá", sentaSofa);
+			tiraBotao("Levantar do sofá")
+			tiraBotao("Assistir TV");
+	}
+var luzSala = false;
+	var abreJanela = function() {
+		luzSala = true
+		alert(nome +" abriu a janela da sala..");
+		tiraBotao("Abrir Janela");
+		criaBotao("Fechar Janela", fechaJanela);
+		mudaCor(1, "lightyellow");
+		document.body.style.zoom = "400%"
+
+
+	}
+	var fechaJanela = function() {
+		luzSala = false;
+		alert(nome +" fechou a janela da sala..");
+		tiraBotao("Fechar Janela");
+		criaBotao("Abrir Janela", abreJanela)
+		mudaCor(1, "black");
+		document.body.style.zoom = "400%"
+	}
+	var assistiuTV = 0;
+	var assisteTv = function() {
+		luzSala = true
+		assistiuTV ++
+		alert(nome +" ligou a sua grande tv 4K e começou a assistir " + programaTv[pegaAleatorio(0,programaTv["length"] - 1)])
+		let morreAssistindo = Math.round(Math.random() * 100)
+		if(morreAssistindo < 30 && assistiuTV > 5) {
+			final4()
+		}
+	}
+//----------------------------------FINAIS---------------------------------
+
+	function recarrega() {
+		window.location.reload(false); 
+	}
+
+	// SIGA ESSE MODELO
+/*
+var a = localStorage.getItem("A")
+function finalA() {
+	
+	alert("Conquista desbloqueada: A")		  
+		if(localStorage.A === NaN){
+			localStorage.setItem("A", 1)
+		}
+			else {
+				a++;
+			}
+
+	mostra("<h1>Morte Por A</h1><br><br> textoaq <br><br> Mortes por a: " + a + "<br>")
+	criaBotao("Reviver", recarrega)
+	localStorage.setItem("A", a)
+	document.body.style.backgroundColor = "lightblue";
+	document.body.style.zoom = "300%"
+
+}
+*/
+
+
+//-------Morte por frio
+var gelado = localStorage.getItem("Gelado")
+function final1() {
+	
+	alert("Conquista desbloqueada: Gelado")		  
+		if(localStorage.Gelado === NaN){
+			localStorage.setItem("Gelado", 1)
+		}
+			else {
+				gelado ++;
+			}
+
+	mostra("<h1>Morte Por Frio</h1><br><br> Muito gelado ai ai que frio <br><br> Mortes por frio: " + gelado + "<br>")
+	criaBotao("Reviver", recarrega)
+	localStorage.setItem("Gelado", gelado)
+	document.body.style.backgroundColor = "lightblue";
+	document.body.style.zoom = "300%"
+
+}
+
+//---------Morte por choque
+
+var eletrico = localStorage.getItem("Eletrico")
+function final2() {
+
+	alert("Conquista desbloqueada: Eletrico")
+		if(localStorage.Eletrico === NaN){
+			localStorage.setItem("Eletrico", 1)
+		} 
+			else {
+				eletrico ++;
+			}
+
+	mostra("<h1>Morte Por Choque</h1><br><br> bzz bzzzzzz  <br><br> Mortes por choque: " + eletrico + "<br>")
+	criaBotao("Reviver", recarrega)
+	localStorage.setItem("Eletrico", eletrico)
+	document.body.style.backgroundColor = "yellow";
+	document.body.style.zoom = "300%"
+
+}
+
+//----------Morte dormindo
+
+var mimindo = localStorage.getItem("Soninho")
+function final3() {
+
+	alert("Conquista desbloqueada: Soninho")
+		if(localStorage.Soninho === NaN){
+			localStorage.setItem("Soninho", 1)
+		}
+			else {
+				mimindo ++;
+			}
+
+	mostra("<h1>Morte Dormindo</h1><br><br>" + nome + " morreu tranquilo enquanto dormia  <br><br> Mortes dormindo: " + mimindo + "<br>")
+	criaBotao("Reviver", recarrega)
+	localStorage.setItem("Soninho", mimindo)
+	document.body.style.backgroundColor = "gray";
+	document.body.style.zoom = "300%"
+
+
+}
+
+if(morreDormindo < 7) {
+	final3()
+}
+
+//-----------Morte por sedentarismo
+var sedentario = localStorage.getItem("Sedentario")
+function final4() {
+
+		alert("Conquista desbloqueada: Sedentario")
+		if(localStorage.Sedentario === NaN){
+			localStorage.setItem("Sedentario", 1)
+		}
+			else {
+				sedentario ++;
+			}
+
+	mostra("<h1>Morte Sedentaria</h1><br><br>" + nome + " morreu de tanto assistir TV  <br><br> Mortes sedentárias: " + sedentario + "<br>")
+	criaBotao("Reviver", recarrega)
+	localStorage.setItem("Sedentario", sedentario)
+	document.body.style.backgroundColor = "brown";
+	document.body.style.zoom = "400%"
+
+}
+
+//---------Morte por malhar
+
+var malhacao = localStorage.getItem("Malhacao")
+function final5() {
+	
+	alert("Conquista desbloqueada: Malhação")		  
+		if(localStorage.Malhacao === NaN){
+			localStorage.setItem("Malhacao", 1)
+		}
+			else {
+				malhacao++;
+			}
+
+	mostra("<h1>Morte Por Malhação</h1><br><br> brrr segura o monstro <br><br> Mortes por malhação: " + malhacao + "<br>")
+	criaBotao("Reviver", recarrega)
+	localStorage.setItem("Malhacao", malhacao)
+	document.body.style.backgroundColor = "lightpink";
+	document.body.style.zoom = "300%"
+
+}
+
+
+
+</script>
