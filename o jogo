@@ -1,4 +1,3 @@
-
 <html>
 <head>
 <style>
@@ -43,11 +42,11 @@ function mostra(texto) {
 }
 
 //--------------------------------ALERTA-TEXTO---------------------------
-
+// No começo do jogo era usado a função alert pra fazer os dialogos mas mudei pra esse pra ficar mais bonito, ainda falta mudar em algumas partes
 function alertaTempo(msg,duracao)
 {
  var el = document.createElement("div");
- el.setAttribute("style","position:absolute;top:70%;left:3%;background-color:white;padding:10pxsolid#000;word-break:break-word;height:70px");
+ el.setAttribute("style","position:absolute;top:70%;left:3%;right:3%;background-color:white;padding:10pxsolid#000;word-break:break-word;height:80px");
  el.innerHTML = msg;
  el.id = "AA"
 
@@ -58,6 +57,7 @@ function alertaTempo(msg,duracao)
 }
 
 //----------------------------------PEDE-NOME----------------------------------
+// Pede o nome do jogador no começo do jogo
 var certeza = null                                                                    // Confere o nome e descarta vazios ou errados
 	var certezaOk = false;
 	if(localStorage.getItem("nome") == undefined){
@@ -85,12 +85,14 @@ var certeza = null                                                              
 		}
 
 //----------------------------------SALVA-NOME----------------------------------
+// Salva o nome na máquina usando o localStorage
 
 function salvaNome() {
 	localStorage.setItem("nome", nome)
 }
 
 //----------------------------------CRIA-OPCAO----------------------------------
+// função pra criar as opções dentro do Select
 
 	function criaOpcao(seleciona, texto, valor) {
 
@@ -104,6 +106,8 @@ function salvaNome() {
 	criaOpcao("lugar", "------------------------------", "-");
 	criaOpcao("lugar", "Quarto", "Quarto");
 
+//---------------------------------CRIA-PEDIDO----------------------------------
+// em progresso
 //----------------------------------SALVA-LUGAR----------------------------------
 	var mudaLugar = 0;
 		var salvaLugarArray = function() {
@@ -116,9 +120,6 @@ function salvaNome() {
 							while(mudaLugar > 1) {
 								mudaLugar = 0;								
 							} 
-								if(gelado > 1) {
-									alert(nome + " entrou em " + lugar)    // Mostra alerta depois da primeira vez
-								}
 
 						}   
 				}			
@@ -127,15 +128,18 @@ function salvaNome() {
 	                                   // Chama se ouver alteração
 
 //----------------------------------MUDA-DISPLAY---------------------------------- 
+// Muda a tela toda vez que mudar a posição ou a luz
 function mudaDisplay() {
 	limpaTela();
 
 //---QUARTO----
+// Muda os botões do quarto dependendo do progresso do jogador
 
 	if(mudaLugar == 1 && posiçãoAtual[0] == "Quarto") {
 		mudaLugar = 0;
 		limpaTela();
 		mudaCor(0, cor[0])
+		alertaTempo(nome + "entrou no <i>Quarto</i>")
 			if(levantou === false) {
 				criaBotao("Levantar", levantar);
 			};	
@@ -151,18 +155,22 @@ function mudaDisplay() {
 			if(luzQuarto === true) {
 				criaBotao("Desligar o abajur", apagaLuz)
 			};
-			if(sedentario >= 1) {
+			if(sedentario >= 1 && levantou === true) {
 				criaBotao("Malhar", malha)
-			}
+			};
+
 			}
 	}
 
-//----SALA----
+//----SALA----------------------
+//Muda os botões da sala dependendo do progresso do jogador
+
 
 	if(mudaLugar == 1 && posiçãoAtual[0] == "Sala") {
 		mudaLugar = 0;
 		limpaTela()
 		mudaCor(1, cor[1])
+		alertaTempo(nome + " entrou na <i> Sala</i>")
 		if(sentado === true){
 			sentado = false
 		}
@@ -175,11 +183,14 @@ function mudaDisplay() {
 		if(luzSala === true){
 			criaBotao("Fechar Janela", fechaJanela);
 		}
+		if(força>25  ) {
+			criaBotao("???", moveMovel);
+		};
 	}
 }
 
 //----------------------------------LIMPA-TELA---------------------------------- 
-
+// Tira todos os botões da tela pro MudaDisplay funcionar certinho
 // Toda vez  que criar um botão novo adiciona ele aqui pra tirar ele
 
 	function limpaTela() {
@@ -193,6 +204,7 @@ function mudaDisplay() {
 		tiraBotao("Abrir Janela");
 		tiraBotao("Fechar Janela")
 		tiraBotao("Assistir TV")
+		tiraBotao("Malhar")
 	}
 //----------------------------------CRIA-BOTAO----------------------------------
 
@@ -223,22 +235,26 @@ function tiraBotao(nome) {
 		document.body.style.backgroundColor = novaCor;
 	}
 //----------------------------------ARRAYS----------------------------------
+// Informações e arrays guardados aqui
 var posiçãoAtual = ["Quarto"];
 var cor = ["black", "black"] 
 // As cores se dão da seguinte forma:
 // 0 = Quarto
 // 1 = Sala
 // ...
-var programaTv = ["a Xuxa", "ao programa do Ratinho.", "Domingão do faustão.", "vídeos de carros rebaixados.", "TikTok de indiano", "a triologia da Barbie.", "uma imagem estática medonha..", "Por Agua Abaixo 3.", "ao jogo do mengão.", "ao Globo Reporter", "ao Domingo Espetacular", "funny monkey versão extendida.", "Carros 2", "ao seu próprio reflexo na tela preta.", "Pesadelo na Cozinha.", "ao casamento da gorda da tua mãe.", "todos os filmes do Adam Sandler.", ""]
+var programaTv = ["a Xuxa", "ao programa do Ratinho.", "Domingão do faustão.", "vídeos de carros rebaixados.", "TikTok de indiano", "a triologia da Barbie.", "uma imagem estática medonha..", "Por Agua Abaixo 3.", "ao jogo do mengão.", "ao Globo Reporter", "ao Domingo Espetacular", "funny monkey versão extendida.", "Carros 2", "ao seu próprio reflexo na tela preta.", "Pesadelo na Cozinha.", "ao casamento da gorda da tua mãe.", "todos os filmes do Adam Sandler.", "ao Globo Rural", "Malhação"]
 
-
-while(localStorage.Forca === "NaN") {
+function pedeForca() {
+	while(localStorage.Forca === "NaN" || !localStorage.Forca) {
 	localStorage.setItem("Forca", 0)
 }
+}
+pedeForca()
 var força = parseInt(localStorage.getItem("Forca"))
 var inteligência = 0;
 
 //----------------------------------QUARTO----------------------------------
+// Lógica dos botões do quarto ficam aqui
 
 var levantou = false;
 var levantar = function() {
@@ -249,7 +265,7 @@ var levantar = function() {
 	final1()
 	} else {
 		if(portaAberta < 1) {
-			alertaTempo(nome + " levanta da cama, suas pantufas quentinhas o protegem.", 15000)
+			alertaTempo(nome + " levanta da cama, suas pantufas quentinhas o protegem.", 8000)
 			limpaTela()
 			criaBotao("Abrir a porta", abrePorta);
 			if(luzQuarto === false) {
@@ -258,16 +274,17 @@ var levantar = function() {
 			if(luzQuarto === true) {
 				criaBotao("Desligar o abajur", apagaLuz)	
 			};
+			if(sedentario >= 1 && levantou === true) {
+				criaBotao("Malhar", malha)
+			}
 		}
 	}
 	}
 	
-	
-
 var pantufas = false;
 var vestirPantufas = function() {
 	tiraBotao("Vestir Pantufas") 
-	alertaTempo("Você veste suas pantufas da Hello Kitty, seus pés estão quentinhos e você pode se levantar.", 10000)
+	alertaTempo("Você veste suas pantufas da Hello Kitty, seus pés estão quentinhos e você pode se levantar.", 8000)
 	 pantufas = true;
 
 }
@@ -295,7 +312,7 @@ var apagaLuz = function() {
 		final2()
 	} else {
 		tiraBotao("Desligar o abajur")
-	alert(nome + " desligou o abajur..")
+	alertaTempo(nome + " desligou o abajur..", 4000)
 	mudaCor(0, "black")
 	document.body.style.zoom = "400%"
 	criaBotao("Ligar o abajur", acendeLuz)
@@ -308,39 +325,37 @@ var malha = function() {
 	var quant = Math.round(Math.random() * 10)
 	if(chance < 10) {
 		força = força + quant
-		alert(nome + " fez alguns agachamentos.. + " + quant + " de força. (" + força + ")")
-		alertaTempo(nome + " fez alguns agachamentos.. + " + quant + " de força. (" + força + ")", 10000)
+		alertaTempo(nome + " fez alguns agachamentos.. + " + quant + " de força. (" + força + ")", 4000)
 	} else{
 		if(chance < 20) {
 			força = força + quant
-			alert(nome +" fez alguns polichinelos.. + " +quant + " de força. (" + força + ")")
-			alertaTempo(nome +" fez alguns polichinelos.. + " +quant + " de força. (" + força + ")", 10000)
+			alertaTempo(nome +" fez alguns polichinelos.. + " +quant + " de força. (" + força + ")", 4000)
 		} else{
 			if(chance < 30) {
 				força = força + quant
-				alert(nome +" fez algumas flexões. + " +quant + " de força. (" + força + ")")
+				alertaTempo(nome +" fez algumas flexões. + " +quant + " de força. (" + força + ")", 4000)
 			} else{
 				if(chance < 40) {
 					força = força + quant
-					alert(nome +" quase se peidou fazendo flexões. + "+ quant + " de força. (" + força + ")")
+					alertaTempo(nome +" quase se peidou fazendo flexões. + "+ quant + " de força. (" + força + ")", 4000)
 				} else{
 					if(chance < 50) {
-						alert(nome +" exercitou a mente. + " +quant + " de inteligencia. (" + força + ")")
+						alertaTempo(nome +" exercitou a mente. + " +quant + " de inteligencia. (" + força + ")", 4000)
 					} else{
 						if(chance < 60) {
-							alert(nome +" tá com preguiça e não fez nada.")
+							alertaTempo(nome +" tá com preguiça e não fez nada.", 4000)
 						} else{
 							if(chance < 70) {
 								força = força - quant
-								alert(nome +" se exercitou muito e machucou o músculo.. -" +quant+ " de força. (" + força + ")")
+								alertaTempo(nome +" se exercitou muito e machucou o músculo.. -" +quant+ " de força. (" + força + ")", 4000)
 							} else{
 								if(chance < 80) {
 									força = força - quant
-									alert("AIAIAI CAIMBRAAA -" + quant + " de força. (" + força + ")")
+									alertaTempo("AIAIAI CAIMBRAAA -" + quant + " de força. (" + força + ")", 4000)
 								} else{
 									if(chance<90) {
 										força = força + quant
-										alert(nome + " malhou os dedos no celular +" + quant+ " de força. (" + força+ ")")
+										alertaTempo(nome + " malhou os dedos no celular +" + quant+ " de força. (" + força+ ")", 4000)
 									} else {
 										if(chance <=100) {
 											final5()
@@ -356,12 +371,29 @@ var malha = function() {
 	}
 	localStorage.setItem("Forca", força)
 }
+var moveMovel = 0
+var moveMovel = function() {
+	moveuMovel = 1
+	tiraBotao("???");
+	alertaTempo(nome +" moveu a <i>Estante de Livros</i> e encontrou um <i>Botão Secreto</i>", 7000)
+	criaBotao("Botão Secreto", botaoSecreto);
+}
 
+var botaoSecretoOk = false;
+var botaoSecreto = function() {
+	tiraBotao("Botão Secreto");
+	alertaTempo(nome +" escuta algo abrindo no <i>Quarto</i>...", 7000);
+	botaoSecretoOk = true;
+}
 
-
-
+var usarComputador = function() {
+	tiraBotao("Usar Computador");
+	alertaTempo(nome +" abriu o Googlo.")
+	criaOpcao()
+}
 
 //----------------------------------SALA----------------------------------
+// Lógica dos botões da sala ficam aqui
 
 var portaAberta = 0;
 var abrePorta = function() {	
@@ -375,35 +407,69 @@ var abrePorta = function() {
 var sentado = false;
 	var sentaSofa = function() {
 		sentado = true;
-		alert(nome +" sentou-se no sofá..")
-			tiraBotao("Sentar no sofá");
+		alertaTempo(nome +" sentou-se no sofá..", 1000)
+			limpaTela()
 			criaBotao("Levantar do sofá", levantaSofa);
-			criaBotao("Assistir TV", assisteTv);
+			if(luzSala==false){
+				criaBotao("Abrir Janela", abreJanela)
+			}
+			if(luzSala==true){
+				criaBotao("Fechar Janela", fechaJanela);
+			}
+			criaBotao("Assistir TV", assisteTv)
 	}	
 	
 	var levantaSofa = function() {
 		sentado = false;
-		alert(nome +" levantou do sofá..");
+		alertaTempo(nome +" levantou do sofá..", 1000);
+		limpaTela()
 			criaBotao("Sentar no sofá", sentaSofa);
-			tiraBotao("Levantar do sofá")
-			tiraBotao("Assistir TV");
+			if(luzSala==false){
+				criaBotao("Abrir Janela", abreJanela)
+			}
+			if(luzSala==true){
+				criaBotao("Fechar Janela", fechaJanela);
+			}
+			
 	}
 var luzSala = false;
 	var abreJanela = function() {
 		luzSala = true
-		alert(nome +" abriu a janela da sala..");
-		tiraBotao("Abrir Janela");
-		criaBotao("Fechar Janela", fechaJanela);
+		alertaTempo(nome +" abriu a janela da sala..", 1000);
+		limpaTela()
+		if(sentado == true){
+			criaBotao("Levantar do sofá", levantaSofa)
+			criaBotao("Fechar Janela", fechaJanela)
+			criaBotao("Assistir TV", assisteTv)
+		}
+		if(sentado == false){
+			criaBotao("Sentar no sofá", sentaSofa)
+			criaBotao("Fechar Janela", fechaJanela);
+			
+		}
+		
 		mudaCor(1, "lightyellow");
 		document.body.style.zoom = "400%"
 
 
 	}
 	var fechaJanela = function() {
-		luzSala = false;
-		alert(nome +" fechou a janela da sala..");
-		tiraBotao("Fechar Janela");
-		criaBotao("Abrir Janela", abreJanela)
+		luzSala = true
+		alertaTempo(nome +" fechou a janela da sala..", 1000);
+		limpaTela()
+		if(sentado == true){
+			criaBotao("Levantar do sofá", levantaSofa)
+			criaBotao("Abrir a Janela", abreJanela);
+			criaBotao("Assistir TV", assisteTv)
+			
+
+		}
+		if(sentado == false){
+			criaBotao("Sentar no sofá", sentaSofa)	
+			criaBotao("Abrir a Janela", abreJanela);
+			
+		}
+		
 		mudaCor(1, "black");
 		document.body.style.zoom = "400%"
 	}
@@ -411,7 +477,7 @@ var luzSala = false;
 	var assisteTv = function() {
 		luzSala = true
 		assistiuTV ++
-		alert(nome +" ligou a sua grande tv 4K e começou a assistir " + programaTv[pegaAleatorio(0,programaTv["length"] - 1)])
+		alertaTempo(nome +" ligou a sua grande tv 4K e começou a assistir " + programaTv[pegaAleatorio(0,programaTv["length"] - 1)], 5000)
 		let morreAssistindo = Math.round(Math.random() * 100)
 		if(morreAssistindo < 30 && assistiuTV > 5) {
 			final4()
@@ -421,6 +487,10 @@ var luzSala = false;
 
 	function recarrega() {
 		window.location.reload(false); 
+	}
+
+	function apagaJogo() {
+		localStorage.clear()
 	}
 
 	// SIGA ESSE MODELO
@@ -460,6 +530,8 @@ function final1() {
 
 	mostra("<h1>Morte Por Frio</h1><br><br> Muito gelado ai ai que frio <br><br> Mortes por frio: " + gelado + "<br>")
 	criaBotao("Reviver", recarrega)
+	mostra("<br><br>")
+	criaBotao("Apagar jogo", apagaJogo)
 	localStorage.setItem("Gelado", gelado)
 	document.body.style.backgroundColor = "lightblue";
 	document.body.style.zoom = "300%"
@@ -481,6 +553,8 @@ function final2() {
 
 	mostra("<h1>Morte Por Choque</h1><br><br> bzz bzzzzzz  <br><br> Mortes por choque: " + eletrico + "<br>")
 	criaBotao("Reviver", recarrega)
+	mostra("<br><br>")
+	criaBotao("Apagar jogo", apagaJogo)
 	localStorage.setItem("Eletrico", eletrico)
 	document.body.style.backgroundColor = "yellow";
 	document.body.style.zoom = "300%"
@@ -502,6 +576,8 @@ function final3() {
 
 	mostra("<h1>Morte Dormindo</h1><br><br>" + nome + " morreu tranquilo enquanto dormia  <br><br> Mortes dormindo: " + mimindo + "<br>")
 	criaBotao("Reviver", recarrega)
+	mostra("<br><br>")
+	criaBotao("Apagar jogo", apagaJogo)
 	localStorage.setItem("Soninho", mimindo)
 	document.body.style.backgroundColor = "gray";
 	document.body.style.zoom = "300%"
@@ -527,6 +603,8 @@ function final4() {
 
 	mostra("<h1>Morte Sedentaria</h1><br><br>" + nome + " morreu de tanto assistir TV  <br><br> Mortes sedentárias: " + sedentario + "<br>")
 	criaBotao("Reviver", recarrega)
+	mostra("<br><br>")
+	criaBotao("Apagar jogo", apagaJogo)
 	localStorage.setItem("Sedentario", sedentario)
 	document.body.style.backgroundColor = "brown";
 	document.body.style.zoom = "400%"
@@ -548,12 +626,13 @@ function final5() {
 
 	mostra("<h1>Morte Por Malhação</h1><br><br> brrr segura o monstro <br><br> Mortes por malhação: " + malhacao + "<br>")
 	criaBotao("Reviver", recarrega)
+	mostra("<br><br>")
+	criaBotao("Apagar jogo", apagaJogo)
 	localStorage.setItem("Malhacao", malhacao)
 	document.body.style.backgroundColor = "lightpink";
 	document.body.style.zoom = "300%"
 
 }
-
 
 
 </script>
